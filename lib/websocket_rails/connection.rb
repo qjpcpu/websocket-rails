@@ -95,7 +95,15 @@ module WebsocketRails
 
     def user
       return unless user_connection?
-      controller_delegate.current_user
+      @user_identifier || controller_delegate.current_user
+    end
+
+    def user=(inject_user)
+      identifier = WebsocketRails.config.user_identifier
+      if identifier
+        @current_user = inject_user
+        @user_identifier = inject_user.send(identifier)
+      end
     end
 
     def user_identifier

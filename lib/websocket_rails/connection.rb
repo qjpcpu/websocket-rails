@@ -102,7 +102,7 @@ module WebsocketRails
       identifier = WebsocketRails.config.user_identifier
       if identifier
         @current_user = inject_user
-        @user_identifier = inject_user.send(identifier)
+        @user_identifier = inject_user.send(identifier).to_s
       end
     end
 
@@ -112,7 +112,7 @@ module WebsocketRails
 
         return unless current_user_responds_to?(identifier)
 
-        controller_delegate.current_user.send(identifier)
+        controller_delegate.current_user.send(identifier).to_s
        end
     end
 

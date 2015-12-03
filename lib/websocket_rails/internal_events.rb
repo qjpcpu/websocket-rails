@@ -1,13 +1,8 @@
 module WebsocketRails
-  class InternalEvents
-    def self.events
-      Proc.new do
-        namespace :websocket_rails do
-          subscribe :pong, :to => InternalController, :with_method => :do_pong
-          subscribe :subscribe, :to => InternalController, :with_method => :subscribe_to_channel
-          subscribe :unsubscribe, :to => InternalController, :with_method => :unsubscribe_to_channel
-        end
-      end
+  EventMap.describe_internal do
+    namespace :websocket_rails do
+      subscribe :subscribe, :to => InternalController, :with_method => :subscribe_to_channel
+      subscribe :unsubscribe, :to => InternalController, :with_method => :unsubscribe_to_channel
     end
   end
 
@@ -28,10 +23,6 @@ module WebsocketRails
       channel_name = event.data[:channel]
       WebsocketRails[channel_name].unsubscribe connection
       trigger_success
-    end
-
-    def do_pong
-      connection.pong = true
     end
   end
 end

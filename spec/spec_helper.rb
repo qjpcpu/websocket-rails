@@ -5,8 +5,6 @@ SimpleCov.start if ENV["COVERAGE"]
 
 require File.expand_path("../../spec/dummy/config/environment", __FILE__)
 require 'rspec/rails'
-require 'rspec/autorun'
-require 'thin'
 
 $:.push File.expand_path("../../lib", __FILE__)
 require 'websocket-rails'
@@ -15,7 +13,6 @@ require 'websocket-rails'
 # in spec/support/ and its subdirectories.
 Dir["./spec/support/**/*.rb"].each {|f| require f}
 require 'websocket_rails/spec_helpers'
-require 'rspec-matchers-matchers'
 
 RSpec.configure do |config|
   # == Mock Framework
@@ -36,6 +33,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     WebsocketRails.config.logger = Logger.new(StringIO.new)
+    WebsocketRails::MessageProcessors::Registry.processors.clear
   end
 
 end

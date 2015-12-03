@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   if Rails.version >= '4.0.0'
-    match "/websocket", :to => WebsocketRails::ConnectionManager.new, via: [:get, :post]
+    get "/websocket", :to => WebsocketRails.connection_manager
   else
-    match "/websocket", :to => WebsocketRails::ConnectionManager.new
+    get "/websocket", :to => WebsocketRails.connection_manager
   end
 end

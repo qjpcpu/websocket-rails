@@ -6,23 +6,28 @@ module WebsocketRails
 
     before do
       @dispatcher = double(:dispatcher)
-      Dispatcher.stub(:new).and_return @dispatcher
-      @event = SpecHelperEvent.new('my_event', data: 'my_data')
+      @processor = double(:processor)
+      allow(Dispatcher).to receive(:new).and_return @dispatcher
+      allow(MessageProcessors::EventProcessor).to receive(:new).and_return @processor
+      allow(@dispatcher).to receive(:reload_event_map!).and_return true
+      allow(@processor).to receive(:dispatcher=)
+      allow(@processor).to receive(:process_message)
+      @event = SpecHelperEvent.new('my_event', 'my_data')
     end
 
     describe 'initialize' do
 
       it 'should initialize the name and namespace of the event' do
-        @event.namespace.should == [:global]
-        @event.name.should == :my_event
+        expect(@event.namespace).to eq([:global])
+        expect(@event.name).to eq(:my_event)
       end
 
       it 'should initialize the data of the event' do
-        @event.data.should == 'my_data'
+        expect(@event.data).to eq('my_data')
       end
 
       it 'should set the event to not triggered' do
-        @event.should_not be_triggered
+        expect(@event).to_not be_triggered
       end
 
     end
@@ -31,21 +36,21 @@ module WebsocketRails
 
       it 'should set the triggered variable to true' do
         @event.trigger
-        @event.should be_triggered
+        expect(@event).to be_triggered
       end
 
     end
 
     describe 'dispatch' do
 
-      it 'should invoke dispatch on the dispatcher object' do
-        @dispatcher.should_receive(:dispatch).with(@event)
+      it 'should invoke process_message on the processor object' do
+        expect(@processor).to receive(:process_message).with(@event)
         @event.dispatch
       end
 
       it 'should return itself to be able to chain matchers' do
-        @dispatcher.stub(:dispatch)
-        @event.dispatch.should == @event
+        allow(@dispatcher).to receive(:dispatch)
+        expect(@event.dispatch).to eq(@event)
       end
 
     end
@@ -58,9 +63,9 @@ describe 'create_event' do
 
   it 'should create a SpecHelperEvent with the correct parameters' do
     event = create_event('my_event','my_data')
-    event.should be_a WebsocketRails::SpecHelperEvent
-    event.name.should == :my_event
-    event.data.should == 'my_data'
+    expect(event).to be_a WebsocketRails::SpecHelperEvent
+    expect(event.name).to eq(:my_event)
+    expect(event.data).to eq('my_data')
   end
 
 end

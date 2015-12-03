@@ -36,36 +36,34 @@ describe 'Route Matchers' do
   describe 'be_routed_to' do
 
     it 'should return true when the event is routed only to the specified controller' do
-     create_event('product.update', nil).should be_routed_to 'route_spec_product#update_product'
+      expect(create_event('product.update', nil)).to be_routed_to('route_spec_product#update_product')
     end
 
     it 'should return true when the event is routed also to the specified controller' do
-     create_event('product.delete', nil).should be_routed_to 'route_spec_product#delete_product'
+      expect(create_event('product.delete', nil)).to be_routed_to 'route_spec_product#delete_product'
     end
 
     it 'should return false when the event is not routed to the specified controller' do
-      create_event('product.update', nil).should_not be_routed_to 'route_spec_product#delete_product'
+      expect(create_event('product.update', nil)).to_not be_routed_to 'route_spec_product#delete_product'
     end
 
     it 'should produce the correct failure message' do
       event = create_event('route_spec_product.update', nil)
-      matcher = be_routed_to 'route_spec_product#delete_product'
-      cache_messages_for_matcher(matcher, event)
-      matcher.should produce_as_failure_message 'expected event update to be routed to target route_spec_product#delete_product'
+      expect do
+        expect(event).to be_routed_to 'route_spec_product#delete_product'
+      end.to raise_exception('expected event update to be routed to target route_spec_product#delete_product')
     end
 
     it 'should produce the correct negative failure message' do
       event = create_event('product.update', nil)
-      matcher = be_routed_to 'route_spec_product#update_product'
-      cache_messages_for_matcher(matcher, event)
-      matcher.should produce_as_negative_failure_message 'expected event update not to be routed to target route_spec_product#update_product'
+      expect do
+        expect(event).to be_routed_to 'route_spec_product#update_product'
+      end.to_not raise_exception # 'expected event update not to be routed to target route_spec_product#update_product'
     end
 
     it 'should produce the correct description' do
-      event = create_event('product.update', nil)
-      matcher = be_routed_to 'route_spec_product#update_product'
-      cache_messages_for_matcher(matcher, event)
-      matcher.should produce_as_description 'be routed to target route_spec_product#update_product'
+      matcher = be_routed_to('route_spec_product#update_product')
+      expect(matcher.description).to eq 'be routed to target route_spec_product#update_product'
     end
 
   end
@@ -73,36 +71,34 @@ describe 'Route Matchers' do
   describe 'be_routed_only_to' do
 
     it 'should return true when the event is routed only to the specified controller' do
-     create_event('product.update', nil).should be_routed_only_to 'route_spec_product#update_product'
+      expect(create_event('product.update', nil)).to be_routed_only_to 'route_spec_product#update_product'
     end
 
     it 'should return false when the event is routed also to the specified controller' do
-     create_event('product.delete', nil).should_not be_routed_only_to 'route_spec_product#delete_product'
+      expect(create_event('product.delete', nil)).to_not be_routed_only_to 'route_spec_product#delete_product'
     end
 
     it 'should return false when the event is not routed to the specified controller' do
-      create_event('product.update', nil).should_not be_routed_only_to 'route_spec_product#delete_product'
+      expect(create_event('product.update', nil)).to_not be_routed_only_to 'route_spec_product#delete_product'
     end
 
     it 'should produce the correct failure message' do
       event = create_event('product.update', nil)
-      matcher = be_routed_only_to 'route_spec_product#delete_product'
-      cache_messages_for_matcher(matcher, event)
-      matcher.should produce_as_failure_message 'expected event update to be routed only to target route_spec_product#delete_product'
+      expect do
+        expect(event).to be_routed_only_to 'route_spec_product#delete_product'
+      end.to raise_exception 'expected event update to be routed only to target route_spec_product#delete_product'
     end
 
     it 'should produce the correct negative failure message' do
       event = create_event('product.update', nil)
-      matcher = be_routed_only_to 'route_spec_product#update_product'
-      cache_messages_for_matcher(matcher, event)
-      matcher.should produce_as_negative_failure_message 'expected event update not to be routed only to target route_spec_product#update_product'
+      expect do
+        expect(event).to be_routed_only_to 'route_spec_product#update_product'
+      end.to_not raise_exception # 'expected event update not to be routed only to target route_spec_product#update_product'
     end
 
     it 'should produce the correct description' do
-      event = create_event('product.update', nil)
       matcher = be_routed_only_to 'route_spec_product#update_product'
-      cache_messages_for_matcher(matcher, event)
-      matcher.should produce_as_description 'be routed only to target route_spec_product#update_product'
+      expect(matcher.description).to eq 'be routed only to target route_spec_product#update_product'
     end
 
   end

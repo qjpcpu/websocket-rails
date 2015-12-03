@@ -8,27 +8,27 @@ Gem::Specification.new do |s|
   s.homepage     = "http://websocket-rails.github.io"
   s.version      = WebsocketRails::VERSION
   s.platform     = Gem::Platform::RUBY
-  s.authors      = [ "Dan Knox", "Kyle Whalen", "Three Dot Loft LLC" ]
-  s.email        = [ "dknox@threedotloft.com" ]
+  s.authors      = [ "Dan Knox", "Rory Low", "Three Dot Loft LLC" ]
+  s.email        = [ "dknox@threedotloft.com", "rory@threedotloft.com" ]
   s.license      = "MIT"
+  s.executables  = "wsr"
 
   s.rubyforge_project = "websocket-rails"
 
-  s.files        = Dir["{lib,bin,spec}/**/*"] + ["MIT-LICENSE", "Rakefile", "Gemfile", "README.md", "CHANGELOG.md"]
-  s.executables  = ['thin-socketrails']
+  s.files        = Dir["{lib,spec}/**/*"] + ["MIT-LICENSE", "Rakefile", "Gemfile", "README.md", "CHANGELOG.md"]
   s.require_path = 'lib'
 
-  s.add_dependency "rails"
-  s.add_dependency "rack"
-  s.add_dependency "faye-websocket"
-  s.add_dependency "thin"
-  s.add_dependency "redis"
-  s.add_dependency "hiredis"
-  s.add_dependency "em-synchrony"
-  s.add_dependency "redis-objects"
+  s.add_runtime_dependency "websocket-rails-js"
+  s.add_runtime_dependency "rails"
+  s.add_runtime_dependency "rack"
+  s.add_runtime_dependency "faye-websocket"
+  s.add_runtime_dependency "redis"
+  s.add_runtime_dependency "hiredis"
+  s.add_runtime_dependency "uuidtools"
+  s.add_runtime_dependency "connection_pool"
+  s.add_runtime_dependency "puma"
   s.add_development_dependency "rake"
-  s.add_development_dependency "rspec-rails"
-  s.add_development_dependency 'rspec-matchers-matchers'
+  s.add_development_dependency "rspec-rails", "~> 2.14.0"
 
   s.post_install_message = "Welcome to WebsocketRails v#{WebsocketRails::VERSION}!"
 

@@ -50,6 +50,10 @@ module WebsocketRails
       @event_routes
     end
 
+    def internal_routes
+      @internal_routes ||= []
+    end
+
     def log_level
       @log_level ||= begin
         case Rails.env.to_sym
@@ -106,6 +110,14 @@ module WebsocketRails
       @synchronize = synchronize
     end
 
+    def synchronize_pool_size
+      @synchronize_pool_size ||= 30
+    end
+
+    def synchronize_pool_size=(pool_size)
+      @synchronize_pool_size = pool_size
+    end
+
     def redis_options
       @redis_options ||= redis_defaults
     end
@@ -115,7 +127,7 @@ module WebsocketRails
     end
 
     def redis_defaults
-      {:host => '127.0.0.1', :port => 6379, :driver => :synchrony}
+      {:host => '127.0.0.1', :port => 6379, :driver => :ruby}
     end
 
     def standalone
@@ -134,35 +146,20 @@ module WebsocketRails
       @standalone_port = port
     end
 
-    def thin_options
-      @thin_options ||= thin_defaults
+    def worker_threads
+      @worker_threads ||= 1
     end
 
-    def thin_options=(options = {})
-      @thin_options = thin_defaults.merge(options)
+    def worker_threads=(thread_count)
+      @worker_threads = thread_count
     end
 
-    def thin_defaults
-      {
-        :port => standalone_port,
-        :pid => "#{Rails.root}/tmp/pids/websocket_rails.pid",
-        :log => "#{Rails.root}/log/websocket_rails_server.log",
-        :tag => 'websocket_rails',
-        :rackup => "#{Rails.root}/config.ru",
-        :threaded => false,
-        :daemonize => daemonize?,
-        :dirname => Rails.root,
-        :max_persistent_conns => 1024,
-        :max_conns => 1024
-      }
+    def hostname
+      @hostname ||= Socket.gethostbyname(Socket.gethostname).first
     end
 
-    def default_ping_interval
-      @default_ping_interval ||= 10
-    end
-
-    def default_ping_interval=(interval)
-      @default_ping_interval = interval.to_i
+    def hostname=(set_host)
+      @hostname = set_host
     end
 
   end

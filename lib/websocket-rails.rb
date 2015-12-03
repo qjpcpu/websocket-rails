@@ -1,13 +1,17 @@
 require "active_support/dependencies"
 require "logger"
-require "thin"
 
 module WebsocketRails
 
+  def self.supported_protocols
+    @supported_protocols ||= []
+  end
+
   class << self
-    def setup
+    def configure
       yield config
     end
+    alias :setup :configure
 
     def config
       @config ||= Configuration.new
@@ -34,8 +38,14 @@ require 'websocket_rails/configuration'
 require 'websocket_rails/logging'
 require 'websocket_rails/synchronization'
 require 'websocket_rails/connection_manager'
+require 'websocket_rails/abstract_message_handler'
+require 'websocket_rails/message_processors/registry'
+require 'websocket_rails/processor'
+require 'websocket_rails/message_processors/event_processor'
+require 'websocket_rails/message_handler'
 require 'websocket_rails/dispatcher'
 require 'websocket_rails/controller_factory'
+require 'websocket_rails/message'
 require 'websocket_rails/event'
 require 'websocket_rails/event_map'
 require 'websocket_rails/event_queue'
@@ -45,9 +55,7 @@ require 'websocket_rails/user_manager'
 require 'websocket_rails/base_controller'
 require 'websocket_rails/internal_events'
 
-require 'websocket_rails/connection_adapters'
-require 'websocket_rails/connection_adapters/http'
-require 'websocket_rails/connection_adapters/web_socket'
+require 'websocket_rails/connection'
 
 # Exceptions
 class WebsocketRails::InvalidConnectionError < StandardError

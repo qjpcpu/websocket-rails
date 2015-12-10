@@ -1,6 +1,7 @@
 require "redis"
 require "redis/connection/ruby"
 require "connection_pool"
+require 'active_support/core_ext/hash/indifferent_access'
 
 module WebsocketRails
 
@@ -149,13 +150,13 @@ module WebsocketRails
 
       def all_remote_users
         redis.with do |conn|
-          conn.hgetall('websocket_rails.users')
+          HashWithIndifferentAccess.new conn.hgetall('websocket_rails.users')
         end
       end
 
       def channel_tokens
         redis.with do |conn|
-          conn.hgetall('websocket_rails.channel_tokens')
+          HashWithIndifferentAccess.new conn.hgetall('websocket_rails.channel_tokens')
         end
       end
 

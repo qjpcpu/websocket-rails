@@ -27,9 +27,9 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "uuidtools"
   s.add_runtime_dependency "connection_pool"
   s.add_runtime_dependency "puma"
+  s.add_runtime_dependency "activesupport", "~> 4.0.0"  
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec-rails", "~> 2.14.0"
-  s.add_development_dependency "activesupport", "~> 4.0.0"
 
   s.post_install_message = "Welcome to WebsocketRails v#{WebsocketRails::VERSION}!"
 
